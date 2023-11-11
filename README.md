@@ -2,13 +2,13 @@
 NestJs Monorepo Boilerplate
 
 ## Tech Stack
-ExpressJs - Routing\n
-Prisma - ORM\n
-Jest - Testing\n
+ExpressJs - Routing</br>
+Prisma - ORM</br>
+Jest - Testing
 
 ## Feature
-Local Auth (signup, signin, forgot-password)\n
-Google Auth\n
-Prisma Migration\n
-User MVC (crud)\n
-Roles Guard (member, admin)\n
+Local Auth (signup, signin, forgot-password)</br>
+Google Auth</br>
+Prisma Migration</br>
+User MVC (crud)</br>
+Roles Guard (member, admin)
