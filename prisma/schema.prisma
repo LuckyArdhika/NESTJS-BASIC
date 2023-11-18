@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// fragment Default {
+//   createdAt DateTime
+//   createdBy Users
+//   updatedAt DateTime
+//   updatedBy Users
+//   deletedAt DateTime
+//   deletedBy Users
+// }
+
+model users {
+  id        String    @default(uuid()) @id @unique @db.Uuid
+  email     String    @unique
+  username  String?
+  firstName String
+  lastName  String?
+  password  String
+
+  createdAt DateTime? @default(now())
+  createdBy users? @relation("CreatedBy", fields: [createdById], references: [id])
+  createdById String? @db.Uuid
+
+  updatedAt DateTime? @updatedAt
+  updatedBy users? @relation("UpdatedBy", fields: [updatedById], references: [id])
+  updatedById String? @db.Uuid
+
+  deletedAt DateTime?
+  deletedBy users? @relation("DeletedBy", fields: [deletedById], references: [id])
+  deletedById String? @db.Uuid
+
+  created     users[]   @relation("CreatedBy")
+  updated     users[]   @relation("UpdatedBy")
+  deleted     users[]   @relation("DeletedBy")
+
+  created_user_roles     users_roles[]   @relation("CreatedBy")
+  updated_user_roles     users_roles[]   @relation("UpdatedBy")
+
+  // many to one but included in column Admin, Moderator, Deputy, Director, Member, etc...
+  roles users_roles[] @relation("User")
+}
+
+model roles {
+  id        String    @default(uuid()) @id @unique @db.Uuid
+  name      String    @unique
+  description String
+  
+  users users_roles[]
+}
+
+// relations model for user and roles
+model users_roles {
+  @@id([userId, roleId])
+  user    users @relation(name: "User", fields: [userId], references: [id])
+  userId  String @db.Uuid
+  role    roles @relation(fields: [roleId], references: [id])
+  roleId  String @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime?
+  created users @relation(name: "CreatedBy", fields: [createdBy], references: [id])
+  createdBy String @db.Uuid
+  updated users @relation(name: "UpdatedBy", fields: [updatedBy], references: [id])
+  updatedBy String @db.Uuid
+}
