@@ -1,5 +1,5 @@
 import { AuthService } from '@/src/auth/auth.service';
-import { ForgotPasswordDto, SignInDto, SignUpDto, signInSchema } from '@/src/auth/dto';
+import { ForgotPasswordDto, SignInDto, SignUpDto } from '@/src/auth/dto';
 import { Controller, Post, Body, UsePipes } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
@@ -15,7 +15,6 @@ export class AuthController {
     isArray: false
   })
 
-//  @UsePipes(ZodValidationPipe)
  @Post('signin') signin(@Body() body: SignInDto){
   return this.authServ.signIn(body);
  }
