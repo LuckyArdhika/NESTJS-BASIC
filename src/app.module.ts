@@ -11,7 +11,7 @@ import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule, ThrottlerModuleOptions } from '@nestjs/throttler';
 import { CaslModule } from './casl/casl.module';
 import { AuthModule } from '@/src/auth/auth.module';
-// import { ZodValidationPipe } from '@/src/auth/pipe/zod-validation.pipe';
+import { ZodValidationPipe } from '@/src/auth/pipe/zod-validation.pipe';
 
 @Module({
   imports: [UserModule, 
@@ -28,10 +28,10 @@ import { AuthModule } from '@/src/auth/auth.module';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
-    // { // not work
-    //   provide: APP_PIPE,
-    //   useClass: ZodValidationPipe,
-    // },
+    { // not work
+      provide: APP_PIPE,
+      useClass: ZodValidationPipe,
+    },
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,

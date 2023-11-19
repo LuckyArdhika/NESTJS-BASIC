@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilter } from '@/src/error/filter/all-exeception.filter';
 import helmet from 'helmet';
 import { configureSwaggerDocs } from '@/src/swagger/swagger.setup';
+import * as morgan from 'morgan';
 
 async function bootstrap() {
 
@@ -20,6 +21,10 @@ async function bootstrap() {
     methods: 'GET,POST,PUT,PATCH,DELETE',
     credentials: true
   });
+
+  if (['local', 'dev', 'test'].includes(process.env.NODE_ENV)){
+    app.use(morgan('dev'));
+  } 
 
   app.use(helmet());
 

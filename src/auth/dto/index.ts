@@ -1,3 +1,4 @@
+import { createZodDto } from '@/src/auth/pipe/zod-validation.type';
 import { z } from 'zod';
 
 export const signInSchema = z.object({
@@ -18,6 +19,10 @@ export const forgotPasswordSchema = z.object({
   email: z.string().email()
 })
 
-export type SignInDto = z.infer<typeof signInSchema>;
-export type SignUpDto = z.infer<typeof signUpSchema>;
-export type ForgotPasswordDto = z.infer<typeof forgotPasswordSchema>;
+// export type SignInDto = z.infer<typeof signInSchema>;
+// export type SignUpDto = z.infer<typeof signUpSchema>;
+// export type ForgotPasswordDto = z.infer<typeof forgotPasswordSchema>;
+
+export class SignInDto extends createZodDto(signInSchema) {}
+export class SignUpDto extends createZodDto(signUpSchema) {}
+export class ForgotPasswordDto extends createZodDto(forgotPasswordSchema) {}

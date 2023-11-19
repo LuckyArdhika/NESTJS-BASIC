@@ -25,16 +25,44 @@ import { z, ZodError, ZodObject, ZodSchema } from 'zod';
 //   }
 // }
 
+// @Injectable()
+// export class ZodValidationPipe implements PipeTransform {
+//   constructor(private schema: ZodObject<any>){}
+
+//   transform(value: any, metadata: ArgumentMetadata) {
+//     try {
+//       this.schema.parse(value);
+//     } catch (err) {
+//       throw new BadRequestException(JSON.parse(err));
+//     }
+//     return value;
+//   }
+// }
+
+
+import { ZodDtoStatic } from './zod-validation.type';
+
 @Injectable()
 export class ZodValidationPipe implements PipeTransform {
-  constructor(private schema: ZodObject<any>){}
+    public transform(value: unknown, metadata: ArgumentMetadata): unknown {
+        const zodSchema = (metadata?.metatype as ZodDtoStatic<unknown>)?.zodSchema;
 
-  transform(value: any, metadata: ArgumentMetadata) {
-    try {
-      this.schema.parse(value);
-    } catch (err) {
-      throw new BadRequestException(JSON.parse(err));
+        if(zodSchema) {
+            const parseResult = zodSchema.safeParse(value);
+
+            if(!parseResult.success) {
+                // @ts-ignore 
+                const { error } = parseResult;
+                const message =  error.errors
+                    .map(error => `${error.path.join('.')}: ${error.message}`)
+                    .join(', ');
+
+                throw new BadRequestException(`Input validation failed: ${message}`);
+            }
+
+            return parseResult.data;
+        }
+
+        return value;
     }
-    return value;
-  }
 }

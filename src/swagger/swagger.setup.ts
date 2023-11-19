@@ -25,12 +25,6 @@ export function configureSwaggerDocs(
       .setDescription("Collagen is a mobile app that runs on NestJS framework. This is the API documentation created by Back-End development team.")
       .setVersion('1.0')
       .addBearerAuth()
-      .addTag('auth')
-      .addTag('users')
-      .addTag('User', "Contains API related to user.")
-      .addTag('Messaging', "Contains API related to messaging functionalities.")
-      .addTag('Post', "Contains API responsible for post functionalities.")
-      .addTag('Marketplace', "Contains API related to marketplace.")
       .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('/docs', app, document);
