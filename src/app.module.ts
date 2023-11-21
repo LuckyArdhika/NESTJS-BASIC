@@ -12,6 +12,7 @@ import { ThrottlerGuard, ThrottlerModule, ThrottlerModuleOptions } from '@nestjs
 import { CaslModule } from './casl/casl.module';
 import { AuthModule } from '@/src/auth/auth.module';
 import { ZodValidationPipe } from '@/src/auth/pipe/zod-validation.pipe';
+import { MarketingModule } from './marketing/marketing.module';
 
 @Module({
   imports: [UserModule, 
@@ -20,7 +21,7 @@ import { ZodValidationPipe } from '@/src/auth/pipe/zod-validation.pipe';
         ttl: Number(process.env.THROTTLE_TTL),
         limit: Number(process.env.THROTTLE_LIMIT)
       }]
-    }), CaslModule, AuthModule
+    }), CaslModule, AuthModule, MarketingModule
   ],
   controllers: [AppController, AuthController, UserController],
   providers: [AppService, UserService, PrismaService,

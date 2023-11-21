@@ -26,6 +26,7 @@ model users {
   firstName String
   lastName  String?
   password  String
+  verifiedEmail Boolean? @default(false)
 
   createdAt DateTime? @default(now())
   createdBy users? @relation("CreatedBy", fields: [createdById], references: [id])

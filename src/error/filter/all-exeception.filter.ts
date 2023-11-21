@@ -37,6 +37,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
       timestamp,
       path,
     };
+
+    // basic 400
+    if (httpStatus == 400) {
+      responseBody.data = {};
+      responseBody.respCode = "body.BAD_REQUEST";
+    }
     
     // uncaught exception
     if (exception.code == 'invalid_grant'){ // expired token google

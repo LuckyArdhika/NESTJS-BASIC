@@ -26,7 +26,14 @@ async function bootstrap() {
     app.use(morgan('dev'));
   } 
 
-  app.use(helmet());
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'",  "'unsafe-inline'"],
+      },
+    }
+  }));
 
   const httpAdapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
