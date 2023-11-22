@@ -2,12 +2,12 @@ import { AbilityBuilder, createMongoAbility, InferSubjects, MongoQuery, ExtractS
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import type { users } from '@prisma/client'
-import { Action } from '@/src/casl/casl.enum';
+import { Action } from '@/src/auth/casl/casl.enum';
 
 type Subjects = InferSubjects<users> | 'all';
 type PossibleAbilities = [Action, Subjects];
 
-type UserWithRoles = Prisma.usersGetPayload<{
+export type UserWithRoles = Prisma.usersGetPayload<{
   include: {
     roles: {
       select: {role: true}
