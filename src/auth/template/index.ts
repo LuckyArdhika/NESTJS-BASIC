@@ -1,6 +1,9 @@
-export const generateResetPasswordPage = () => {
+export const generateResetPasswordPage = (token) => {
   return `
   <html>
+  <head>
+    <meta name="referrer" content="origin">
+  </head>
   <body>
     <div class="reset-password-page">
       <h2 class="reset-password-title">Reset Password</h2>
@@ -106,7 +109,7 @@ export const generateResetPasswordPage = () => {
         };
 
         // Send POST request to /api/auth/reset-password
-        fetch("/api/auth/reset-password", {
+        fetch("/api/auth/reset-password?token=${token}", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -116,7 +119,7 @@ export const generateResetPasswordPage = () => {
           .then(response => {
             if (response.ok) {
               const successElement = document.getElementById("reset-password-success");
-              successElement.textContent = "Password reset successful!";
+              successElement.textContent = "Password reset successful!, now you can login using the new password.";
               document.getElementById("password-validation-error").textContent = "";
             } else {
               throw new Error("Password reset failed, please try again or request a new one");

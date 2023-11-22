@@ -1,8 +1,8 @@
 import { AuthService } from '@/src/auth/auth.service';
 import { ForgotPasswordDto, ResetPasswordPostDto, ResetPasswordPostTokenDto, SignInDto, SignInSchema, SignUpDto } from '@/src/auth/dto';
-import { Controller, Post, Body, Res, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, Res, Get, Query, Req } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
-import {Response} from 'express';
+import {Request, Response} from 'express';
 
 @ApiTags("Auth")
 @Controller('auth')
@@ -28,11 +28,12 @@ export class AuthController {
   return this.authServ.forgotPassword(body);
  }
 
- @Get('reset-password') rp(@Query('token') token){
-  return this.authServ.resetPassword(token);
+ @Get('reset-password') rp(@Query() query: ResetPasswordPostTokenDto){
+  return this.authServ.resetPassword(query.token);
  } 
 
- @Post('reset-password') rpp(@Body() body: ResetPasswordPostDto, @Query('token') token: ResetPasswordPostTokenDto){
-  return this.authServ.resetPasswordPost(body, token);
+ 
+ @Post('reset-password') rpp(@Req() req: Request, @Body() body: ResetPasswordPostDto, @Query() query: ResetPasswordPostTokenDto){
+  return this.authServ.resetPasswordPost(body, query.token);
  }
 }

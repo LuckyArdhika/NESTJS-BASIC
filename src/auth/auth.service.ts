@@ -3,7 +3,7 @@ import { sign, verify } from '@/src/EnH/jwt.fn-service';
 import { ForgotPasswordDto, ResetPasswordPostDto, SignInDto, SignUpDto } from '@/src/auth/dto';
 import { generateResetPasswordPage } from '@/src/auth/template';
 import { EmailService } from '@/src/marketing/email/email.service';
-import { Injectable, NotFoundException, ForbiddenException, UnprocessableEntityException, GoneException, Body } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, UnprocessableEntityException, GoneException, Body, BadRequestException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { Response } from 'express';
 
@@ -66,14 +66,22 @@ export class AuthService {
   }
 
   resetPassword(token){
-    // if (!verify(token)) throw new ForbiddenException("Can not validate its you, maybe the token incorrect or has been expired.");
+    try {
+      !verify(token);
+    } catch (err){
+      throw new BadRequestException("Can not validate its you, maybe the token incorrect or has been expired.");
+    }
     
-    return generateResetPasswordPage();
+    return generateResetPasswordPage(token);
   }
   
   async resetPasswordPost(body: ResetPasswordPostDto, token){
-    const verified = verify(token);
-    if (!verified) throw new ForbiddenException("Can not validate its you, maybe the token incorrect or has been expired.");
+    let verified;
+    try {
+      verified = verify(token);
+    } catch (err) {
+      throw new BadRequestException("Can not validate its you, maybe the token incorrect or has been expired.");
+    }
     
     const payloadInside: {email: string} = verified as any;
     return await this.prisma.users.update({where: {email: payloadInside.email}, data: {password: hash(body.newPassword)}});
