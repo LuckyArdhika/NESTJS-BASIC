@@ -13,6 +13,7 @@ import { CaslModule } from './auth/casl/casl.module';
 import { AuthModule } from '@/src/auth/auth.module';
 import { ZodValidationPipe } from '@/src/auth/pipe/zod-validation.pipe';
 import { MarketingModule } from './marketing/marketing.module';
+import { PrismaClient } from '@prisma/client';
 
 @Module({
   imports: [UserModule, 
@@ -24,7 +25,7 @@ import { MarketingModule } from './marketing/marketing.module';
     }), CaslModule, AuthModule, MarketingModule
   ],
   controllers: [AppController, AuthController, UserController],
-  providers: [AppService, UserService, PrismaService,
+  providers: [AppService, UserService, PrismaService, PrismaClient,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

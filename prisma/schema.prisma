@@ -70,6 +70,6 @@ model users_roles {
   updatedAt DateTime?
   created users @relation(name: "CreatedBy", fields: [createdBy], references: [id])
   createdBy String @db.Uuid
-  updated users @relation(name: "UpdatedBy", fields: [updatedBy], references: [id])
-  updatedBy String @db.Uuid
+  updated users? @relation(name: "UpdatedBy", fields: [updatedBy], references: [id])
+  updatedBy String? @db.Uuid
 }

@@ -38,6 +38,10 @@ export class AuthController {
   return this.authServ.resetPasswordPost(body, query.token);
  }
 
+ @Get() open(){
+  return "v1";
+ }
+
  @UseGuards(AuthGuard)
  @Get('protected') protected(){
    return 1;
