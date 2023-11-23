@@ -1,6 +1,8 @@
+import { memberRoleId, systemUserId } from '@/prisma/seed/user.seed';
 import { compare, hash } from '@/src/EnH/hash.fn-service';
 import { sign, verify } from '@/src/EnH/jwt.fn-service';
 import { ForgotPasswordDto, ResetPasswordPostDto, SignInDto, SignUpDto } from '@/src/auth/dto';
+import { Roles } from '@/src/auth/guards/role.guard';
 import { generateResetPasswordPage } from '@/src/auth/template';
 import { EmailService } from '@/src/marketing/email/email.service';
 import { Injectable, NotFoundException, ForbiddenException, UnprocessableEntityException, GoneException, Body, BadRequestException } from '@nestjs/common';
@@ -15,12 +17,13 @@ export class AuthService {
   ){}
 
   async signIn(body: SignInDto, res: Response){
-    const user = await this.prisma.users.findUnique({where: {email: body.email}});
+    const user = await this.prisma.users.findUnique({where: {email: body.email, deletedAt: null}});
     if (!user) throw new NotFoundException("User is not registered");
-
+    
     // compare passwd
+    
     if (!compare(body.password, user.password)) throw new ForbiddenException("Wrong password");
-
+    
     // set cookie
     const date = new Date();
     if (body.remember_me) {
@@ -34,14 +37,31 @@ export class AuthService {
   }
 
   async signUp(body: SignUpDto){
-    const user = await this.prisma.users.findUnique({where: {email: body.email}});
+    const user = await this.prisma.users.findUnique({where: {email: body.email, deletedAt: null}});
     if (user) throw new GoneException("Email already registered, please login");
 
     return await this.prisma.users.create({data: {
       email: body.email,
       firstName: body.firstName,
       lastName: body.lastName,
-      password: body.password
+      password: body.password,
+      roles: {
+        create: [
+          {
+            // roleId: memberRoleId,
+            created: {
+              connect: {
+                id: systemUserId
+              }
+            },
+            role: {
+              connect: {
+                id: memberRoleId
+              }
+            }
+          }
+        ]
+      }
     }});
   }
 
@@ -50,7 +70,7 @@ export class AuthService {
   }
 
   async forgotPassword(@Body() body: ForgotPasswordDto){
-    const user = await this.prisma.users.findUnique({where: {email: body.email}});
+    const user = await this.prisma.users.findUnique({where: {email: body.email, deletedAt: null}});
     if (user){
       this.emailServ.sendEmail({
         useTemplate: 'FG',

@@ -4,6 +4,7 @@ import { AllExceptionsFilter } from '@/src/error/filter/all-exeception.filter';
 import helmet from 'helmet';
 import { configureSwaggerDocs } from '@/src/swagger/swagger.setup';
 import * as morgan from 'morgan';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
 
@@ -24,7 +25,9 @@ async function bootstrap() {
 
   if (['local', 'dev', 'test'].includes(process.env.NODE_ENV)){
     app.use(morgan('dev'));
-  } 
+  }
+
+  app.use(cookieParser());
 
   app.use(helmet({
     contentSecurityPolicy: {

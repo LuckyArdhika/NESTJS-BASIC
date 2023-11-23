@@ -18,7 +18,7 @@ export class AuthController {
     isArray: false
   })
 
- @Post('signin') signin(@Body() body: SignInDto, @Res() res: Response){
+ @Post('signin') signin(@Body() body: SignInDto, @Res({passthrough: true}) res: Response){
   return this.authServ.signIn(body, res);
  }
  

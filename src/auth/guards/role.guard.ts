@@ -2,6 +2,11 @@ import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { Request } from "express";
 
+export enum Roles {
+  admin = 'admin',
+  member = 'member'
+}; 
+
 export const UseRoles = Reflector.createDecorator<string[]>();
 
 @Injectable()
@@ -9,6 +14,7 @@ export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   matchRoles(allowedRoles: string[], userRoles: string[]): boolean {
+    // console.log(allowedRoles, userRoles)
     return allowedRoles.some(x => userRoles.includes(x));
   }
 

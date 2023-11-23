@@ -1,4 +1,4 @@
-import { seedUser } from '@/prisma/seed/user.seed';
+import { seedUser } from './user.seed';
 import { PrismaClient } from '@prisma/client';
 import * as dotenv from 'dotenv';
 
@@ -17,7 +17,7 @@ async function main(){
 
   return prisma.$transaction(async (tx) => {
 
-    seedUser(tx);
+    await seedUser(tx);
     
   })
 }

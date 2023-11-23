@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate {
     const request: Request = context.switchToHttp().getRequest();
     try {
       const payload: {email: string} = verify(request.cookies["Authorization"]) as any;
-      request.user = await this.prisma.users.findUniqueOrThrow({where: {email: payload.email}, include: {roles: {include: {role: true}}}});
+      request.user = await this.prisma.users.findUniqueOrThrow({where: {email: payload.email, deletedAt: null}, include: {roles: {include: {role: true}}}});
       return true;
     } catch (err) {
       return false;
