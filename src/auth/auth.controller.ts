@@ -4,7 +4,8 @@ import { ForgotPasswordDto, ResetPasswordPostDto, ResetPasswordPostTokenDto, Sig
 import { Controller, Post, Body, Res, Get, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import {Request, Response} from 'express';
-import { UseRoles } from '@/src/auth/guards/role.guard';
+import { Roles, UseRoles } from '@/src/auth/guards/role.guard';
+import { RolesGuard } from './guards/role.guard';
 
 @ApiTags("Auth")
 @Controller('auth')
@@ -47,7 +48,8 @@ export class AuthController {
    return 1;
   }
   
- @UseGuards(AuthGuard) @UseRoles(['admin'])
+@UseRoles([Roles.admin])
+ @UseGuards(AuthGuard, RolesGuard)
  @Get('protected-roles') protectedRoles(){
    return 1;
  }

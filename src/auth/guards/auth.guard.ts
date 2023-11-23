@@ -1,5 +1,6 @@
 import { verify } from '@/src/EnH/jwt.fn-service';
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { authError } from '@/src/error/dict/auth.error-dict';
+import { CanActivate, ExecutionContext, Injectable, ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { Request } from 'express';
 
@@ -13,13 +14,16 @@ export class AuthGuard implements CanActivate {
     context: ExecutionContext,
   ) {
     const request: Request = context.switchToHttp().getRequest();
+    let user;
     try {
       const payload: {email: string} = verify(request.cookies["Authorization"]) as any;
-      request.user = await this.prisma.users.findUniqueOrThrow({where: {email: payload.email, deletedAt: null}, include: {roles: {include: {role: true}}}});
-      return true;
+      user = await this.prisma.users.findUniqueOrThrow({where: {email: payload.email, deletedAt: null}, include: {roles: {include: {role: true}}}});
     } catch (err) {
-      return false;
+      throw new UnauthorizedException();
     }
 
+    if (!user.verifiedEmail) throw new ForbiddenException({respCode: "auth.UNVERIFIED_EMAIL", message: authError["auth.UNVERIFIED_EMAIL"]});
+    request.user = user;
+    return true;
   }
 }

@@ -7,13 +7,14 @@ import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
 import { PrismaService } from './prisma/prisma.service';
 import { AllExceptionsFilter } from '@/src/error/filter/all-exeception.filter';
-import { APP_FILTER, APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule, ThrottlerModuleOptions } from '@nestjs/throttler';
 import { CaslModule } from './auth/casl/casl.module';
 import { AuthModule } from '@/src/auth/auth.module';
 import { ZodValidationPipe } from '@/src/auth/pipe/zod-validation.pipe';
 import { MarketingModule } from './marketing/marketing.module';
 import { PrismaClient } from '@prisma/client';
+import { ResponseInterceptor } from '@/src/utils/interceptor/response.interceptor';
 
 @Module({
   imports: [UserModule, 
@@ -37,6 +38,10 @@ import { PrismaClient } from '@prisma/client';
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
     },
   ],
 })

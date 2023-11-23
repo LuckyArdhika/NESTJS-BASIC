@@ -31,9 +31,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const responseBody = {
       data: exception.response?.message ?? exception.response,
       statusCode: httpStatus,
-      respCode: exception.respCode ?? "UNKNOWN",
+      respCode: exception.respCode ?? exception.response.respCode ?? "UNKNOWN",
       error: exception.name,
-      message: exception instanceof HttpException ? exception.message : `[${exception.code ?? "UNKNOWN"}] Internal Server Error`,
+      message: exception instanceof HttpException ? exception.message : `[${exception.code ?? exception.respCode ?? "UNKNOWN"}] Internal Server Error`,
       timestamp,
       path,
     };
