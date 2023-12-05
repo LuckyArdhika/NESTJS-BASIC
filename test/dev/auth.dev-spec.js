@@ -11,12 +11,13 @@ const baseUrl = `${process.env.ORIGIN}/api`;
 async function Start(){ 
   try {
 
-    console.log("=======================================");
+    console.log(`${cyan} ==============  AUTH  ================`);
+    console.log("---------------------------------------------");
     const signinUrl = `${baseUrl}/auth/signin`;
     console.log(`${green}[Auth] ${reset}SignIn: ${green}${signinUrl}${reset}`);
     const res = await fetch(signinUrl, {method: 'POST', body: {}});
     console.log(`Res: `, res);
-    console.log("=======================================");
+    console.log("---------------------------------------------");
   } catch (err) {
     console.error(`${red}[!] Error: `, err);
   }
