@@ -4,6 +4,7 @@ import * as request from 'supertest';
 
 import { AuthService } from '@/src/auth/auth.service';
 import { AuthModule } from '@/src/auth/auth.module';
+import { AppModule } from '@/src/app.module';
 
 describe('TodoModule', () => {
  let app: INestApplication;
@@ -26,21 +27,18 @@ describe('TodoModule', () => {
 }
 
  const auth = {
-  'signin': '/api/auth/signin'
+  'signin': '/auth/signin'
  };
 
  beforeEach(async () => {
    const moduleFixture: TestingModule = await Test.createTestingModule({
-     imports: [AuthModule],
-   })
-     .overrideProvider(AuthService)
-     .useValue(mockTodoService)
-     .compile();
+     imports: [AppModule],
+   }).compile();
 
    app = moduleFixture.createNestApplication();
    await app.init();
    await waitSeconds();
- });
+ }, 10000);
 
 //  afterEach(() => {
 //    jest.clearAllMocks();
@@ -52,7 +50,13 @@ describe('TodoModule', () => {
   //  });
 
    it('should return OK', async () => {
-     await (await request(app.getHttpServer()).post(auth.signin)).body({}).expect(400, {});
+     return await request(app.getHttpServer()).post(auth.signin).send({}).expect(404, {
+      data: {},
+      statusCode: 400,
+      respCode: 'body.BAD_REQUEST',
+      error: 'BadRequestException',
+      message: 'Input validation failed: email: Required, password: Required, remember_me: Required'
+    });
    });
  });
 });

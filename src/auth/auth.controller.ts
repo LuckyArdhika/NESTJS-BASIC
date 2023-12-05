@@ -40,7 +40,7 @@ export class AuthController {
  }
 
  @Get() open(){
-  return "v1";
+  return "v1 - auth";
  }
 
  @UseGuards(AuthGuard)

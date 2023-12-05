@@ -20,4 +20,9 @@ describe('AppController (e2e)', () => {
       .get('/')
       .expect(200)
   });
+
+  // it('/api/auth/signin (POST)', async () => {
+  //   const res = await request(app.getHttpServer()).post('/api/auth/signin').send({}).expect(400, {});
+  //   console.log(res.body);
+  // });
 });
