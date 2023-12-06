@@ -50,7 +50,7 @@ describe('TodoModule', () => {
   //  });
 
    it('should return OK', async () => {
-     return await request(app.getHttpServer()).post(auth.signin).send({}).expect(404, {
+     return await request(app.getHttpServer()).post(auth.signin).send({}).expect(400, {
       data: {},
       statusCode: 400,
       respCode: 'body.BAD_REQUEST',
